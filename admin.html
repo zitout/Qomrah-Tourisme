@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المدير - حاسبة تقسيط العمرة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    /* إعدادات أساسية */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* تنسيق الجسم */
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        font-family: 'Tajawal', sans-serif;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+
+    /* حركة الخلفية */
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* تنسيق الحاسبة */
+    .calculator {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        position: relative;
+    }
+
+    /* تأثير الحدود المضيئة */
+    .calculator::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #90CAF9, #A1C4FD, #E2EBF0);
+        border-radius: 22px;
+        z-index: -1;
+        filter: blur(15px);
+        opacity: 0.3;
+        animation: borderGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.4; }
+    }
+
+    /* تنسيق العنوان */
+    h2 {
+        color: #37474F;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        position: relative;
+        display: inline-block;
+    }
+
+    /* تأثير خط تحت العنوان */
+    h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #90CAF9, #A1C4FD);
+        border-radius: 2px;
+        transform: scaleX(0);
+        animation: titleUnderline 3s ease-in-out infinite;
+    }
+
+    @keyframes titleUnderline {
+        0%, 100% { transform: scaleX(0); }
+        50% { transform: scaleX(1); }
+    }
+
+    /* تنسيق مجموعات الإدخال */
+    .input-group {
+        margin-bottom: 2rem;
+        text-align: right;
+        position: relative;
+        transform: translateZ(20px);
+    }
+
+    /* تنسيق التسميات */
+    label {
+        display: block;
+        margin-bottom: 0.8rem;
+        color: #455A64;
+        font-weight: bold;
+        font-size: 1.1rem;
+        transition: color 0.3s;
+    }
+
+    /* تنسيق حقول الإدخال والاختيار */
+    select, input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #E3F2FD;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #37474F;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+
+    /* تأثيرات التحويم والتركيز */
+    select:hover, input:hover {
+        transform: translateY(-2px);
+        border-color: #BBDEFB;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: #90CAF9;
+        box-shadow: 0 0 15px rgba(144, 202, 249, 0.2);
+    }
+
+    /* تنسيق خاص لحقل سعر العمرة */
+    #umrahPrice {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2196F3;
+        text-align: center;
+    }
+
+    /* تنسيق صندوق النتيجة */
+    .result-box {
+        background: linear-gradient(135deg, #F5F9FF 0%, #FFFFFF 100%);
+        padding: 2rem;
+        border-radius: 15px;
+        margin-top: 2rem;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #E3F2FD;
+    }
+
+    /* تأثير التحويم على صندوق النتيجة */
+    .result-box::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+        transition: all 0.5s;
+    }
+
+    .result-box:hover::before {
+        top: 100%;
+    }
+
+    /* تنسيق النص في صندوق النتيجة */
+    #result {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #37474F;
+        line-height: 2;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* زر إعادة التعيين */
+    .reset-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .reset-button:hover {
+        background-color: #c0392b;
+        transform: scale(1.1);
+    }
+
+    /* زر تسجيل الخروج */
+    .logout-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Tajawal', sans-serif;
+        transition: all 0.3s;
+        z-index: 1000;
+    }
+
+    .logout-button:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+    }
+
+    /* عداد الزوار */
+    .visitor-count {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.5s ease;
+    }
+
+    /* تأثيرات حركية */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.01); }
+        100% { transform: scale(1); }
+    }
+
+    .result-box.pulse {
+        animation: pulse 1s ease-in-out;
+    }
+
+    /* تحميل */
+    .loading::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, #90CAF9, #A1C4FD);
+        animation: loading 1.5s ease-in-out infinite;
+    }
+
+    @keyframes loading {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    /* تحسينات للموبايل */
+    @media (max-width: 768px) {
+        .calculator {
+            padding: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+        
+        .visitor-count {
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+        }
+        
+        .logout-button {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        body {
+            padding: 1rem;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        #result {
+            font-size: 1.2rem;
+        }
+
+        .reset-button {
+            padding: 12px;
+            font-size: 1rem;
+        }
+    }
+
+            /* إضافة تنسيق لصفحة التحقق */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .auth-container input {
+            margin: 1rem 0;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        
+        .auth-container button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    .login-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.login-box input {
+    width: 250px;
+    padding: 10px;
+    margin: 1rem 0;
+    border: 2px solid #E3F2FD;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    text-align: center;
+    direction: ltr;
+}
+
+.login-box button {
+    padding: 10px 30px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    transition: all 0.3s;
+}
+
+.login-box button:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+    
+</style>
+    
+</head>
+    
+<body>
+
+    <div id="loginPage" class="login-page">
+    <div class="login-box">
+        <h2>تسجيل دخول المدير</h2>
+        <div class="input-group">
+            <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور">
+            <button onclick="checkPassword()">دخول</button>
+        </div>
+    </div>
+</div>
+
+     <div id="adminContent" style="display: none;">
+       
+
+
+    
+    <div class="background-animation">
+        <span style="left: 10%; top: 20%;"></span>
+        <span style="left: 30%; top: 40%;"></span>
+        <span style="left: 50%; top: 60%;"></span>
+        <span style="left: 70%; top: 80%;"></span>
+        <span style="left: 90%; top: 10%;"></span>
+    </div>
+
+    <div id="visitorCount" class="visitor-count">0</div>
+   
+
+    <div class="calculator">
+        <h2>لوحة تحكم المدير - حاسبة تقسيط العمرة</h2>
+        
+        <div class="input-group">
+            <label for="umrahPrice">سعر العمرة:</label>
+            <input type="number" id="umrahPrice" placeholder="أدخل سعر العمرة">
+        </div>
+
+        <div class="input-group">
+            <label for="persons">عدد الأشخاص:</label>
+            <select id="persons">
+                <option value="1">شخص واحد</option>
+                <option value="2">شخصين</option>
+                <option value="3">3 أشخاص</option>
+                <option value="4">4 أشخاص</option>
+                <option value="5">5 أشخاص</option>
+                <option value="6">6 أشخاص</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="months">عدد الأشهر:</label>
+            <select id="months">
+                <option value="3">3 أشهر</option>
+                <option value="4">4 أشهر</option>
+                <option value="5">5 أشهر</option>
+                <option value="6">6 أشهر</option>
+                <option value="7">7 أشهر</option>
+                <option value="8">8 أشهر</option>
+                <option value="9">9 أشهر</option>
+                <option value="10">10 أشهر</option>
+                <option value="11">11 شهر</option>
+                <option value="12">12 شهر</option>
+                <option value="13" selected>13 شهر</option>
+                <option value="14">14 شهر</option>
+                <option value="15">15 شهر</option>
+                <option value="16">16 شهر</option>
+                <option value="17">17 شهر</option>
+                <option value="18">18 شهر</option>
+           </select>
+        </div>
+       <div class="input-group">
+    <label for="downpayment">التسبيق (اختياري):</label>
+    <input type="number" 
+           id="downpayment" 
+           placeholder="أدخل مبلغ التسبيق" 
+           min="0" 
+           value="0"
+    >
+</div>
+        
+        <div class="result-box">
+            <p id="result">النتيجة ستظهر هنا</p>
+        </div>
+    </div>
+
+    <button class="reset-button" onclick="resetCalculator()">↺</button>
+    <button class="logout-button" onclick="logout()">تسجيل الخروج</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    
+    <!-- إضافة Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    </body>
+</html>
+
+<script>
+
+     function checkPassword() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === '2022') {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+        initializePage(); // دالة لتهيئة صفحة المدير
+    } else {
+        alert('كلمة المرور غير صحيحة');
+        document.getElementById('adminPassword').value = '';
+    }
+}
+
+// إضافة مستمع لمفتاح Enter
+document.getElementById('adminPassword').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        checkPassword();
+    }
+});
+
+// دالة تهيئة الصفحة
+function initializePage() {
+    initAnimations();
+    incrementVisitorCount();
+    displayVisitorCount();
+}
+    
+
+
+    // تكوين Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDEQLPyt8Wp0oA5pvgKz93dczqYsBNDpvY",
+        authDomain: "omrati-453e1.firebaseapp.com",
+        databaseURL: "https://omrati-453e1-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "omrati-453e1",
+        storageBucket: "omrati-453e1.appspot.com",
+        messagingSenderId: "211184940647",
+        appId: "1:211184940647:web:865a3a9810d8b45faf06c2",
+        measurementId: "G-RM7T583FYY"
+    };
+
+    // تهيئة Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+             
+
+        // عند تحميل الصفحة
+        window.onload = function() {
+            document.getElementById('authPage').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+            
+            // إضافة مستمع لمفتاح Enter
+            document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+        }
+
+      
+
+            
+    // معدلات الربح
+    const RATES = {
+        3: 0.2, 4: 0.22, 5: 0.24, 6: 0.27, 7: 0.3, 8: 0.34,
+        9: 0.38, 10: 0.42, 11: 0.46, 12: 0.5, 13: 0.52,
+        14: 0.57, 15: 0.62, 16: 0.67, 17: 0.72, 18: 0.77
+    };
+
+    // الدوال المساعدة
+    function roundUpToNearest100(number) {
+        return Math.ceil(number / 100) * 100;
+    }
+
+ function formatNumber(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+    // دالة الحساب الرئيسية
+    function calculate() {
+        const resultBox = document.querySelector('.result-box');
+        resultBox.classList.add('loading');
+        
+        const umrahPrice = parseFloat(document.getElementById('umrahPrice').value) || 0;
+        const persons = parseInt(document.getElementById('persons').value);
+        const months = parseInt(document.getElementById('months').value);
+        const downpayment = parseFloat(document.getElementById('downpayment').value) || 0;
+
+        if (umrahPrice <= 0) {
+            document.getElementById('result').innerHTML = 'الرجاء إدخال سعر صحيح للعمرة';
+            resultBox.classList.remove('loading');
+            return;
+        }
+
+        const totalPrice = umrahPrice * persons;
+
+        if (downpayment > totalPrice) {
+            document.getElementById('result').innerHTML = 'مبلغ التسبيق أكبر من السعر الإجمالي';
+            resultBox.classList.remove('loading');
+            return;
+        }
+
+        const remainingAmount = totalPrice - downpayment;
+        let monthlyRate = RATES[months];
+
+        if (remainingAmount >= 200000) {
+            monthlyRate *= 0.8;
+        } else if (remainingAmount >= 100000) {
+            monthlyRate *= 0.9;
+        }
+
+        const totalWithProfit = remainingAmount * (1 + monthlyRate);
+        const regularMonthlyPayment = roundUpToNearest100(Math.floor(totalWithProfit / months));
+
+        resultBox.classList.remove('loading');
+        resultBox.classList.remove('pulse');
+        void resultBox.offsetWidth;
+        resultBox.classList.add('pulse');
+
+        document.getElementById('result').innerHTML = `
+            سعر العمرة للشخص: ${formatNumber(umrahPrice)} <br>
+            عدد الأشخاص: ${persons}<br>
+            المبلغ الإجمالي: ${formatNumber(totalPrice)} <br>
+            التسبيق: ${formatNumber(downpayment)} <br>
+            القسط الشهري: ${formatNumber(regularMonthlyPayment)} <br>
+            إجمالي المبلغ مع الربح: ${formatNumber(regularMonthlyPayment * months)} 
+        `;
+
+        saveCalculation({
+            umrahPrice,
+            persons,
+            months,
+            downpayment,
+            regularMonthlyPayment,
+            totalAmount: regularMonthlyPayment * months,
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    // دوال إضافية
+    function logout() {
+        sessionStorage.removeItem('adminLoggedIn');
+        window.location.href = 'index.html';
+    }
+
+    function resetCalculator() {
+        document.getElementById('umrahPrice').value = '';
+        document.getElementById('persons').value = '1';
+        document.getElementById('months').value = '13';
+        document.getElementById('downpayment').value = '0';
+        document.getElementById('result').innerHTML = 'النتيجة ستظهر هنا';
+    }
+
+    function saveCalculation(data) {
+        const calculationsRef = database.ref('calculations');
+        calculationsRef.push(data);
+    }
+
+    // مستمعات الأحداث
+    document.getElementById('umrahPrice').addEventListener('input', calculate);
+    document.getElementById('persons').addEventListener('change', calculate);
+    document.getElementById('months').addEventListener('change', calculate);
+    document.getElementById('downpayment').addEventListener('input', calculate);
+
+    // معالجة حقل التسبيق
+    const downpaymentInput = document.getElementById('downpayment');
+    downpaymentInput.addEventListener('focus', function() {
+        if (this.value === '0') {
+            this.value = '';
+        }
+    });
+
+    downpaymentInput.addEventListener('blur', function() {
+        if (this.value === '') {
+            this.value = '0';
+            calculate();
+        }
+    });
+
+    // تهيئة الصفحة
+    window.addEventListener('load', () => {
+        initAnimations();
+        incrementVisitorCount();
+        displayVisitorCount();
+    });
+</script>
+
+</body>
+</html>
+
+
+  
