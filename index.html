@@ -1,17 +1,44 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="حاسبة تقسيط العمرة - احسب تكلفة رحلة العمرة بالتقسيط">
+    <meta name="keywords" content="عمرة, تقسيط, حاسبة, العمرة بالتقسيط">
     <title>حاسبة تقسيط العمرة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Preload Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap">
+
+    <!-- Essential CSS Libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     <style>
-       * {
+        /* CSS Variables */
+        :root {
+            --primary-color: #23a6d5;
+            --secondary-color: #23d5ab;
+            --accent-color: #e73c7e;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --shadow-color: rgba(31, 38, 135, 0.37);
+            --transition-speed: 0.3s;
+        }
+
+        /* Reset Styles */
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Body Styles */
         body {
             min-height: 100vh;
             display: flex;
@@ -20,426 +47,303 @@
             align-items: center;
             padding: 2rem;
             font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background: linear-gradient(-45deg, 
+                #ee7752, 
+                var(--accent-color), 
+                var(--primary-color), 
+                var(--secondary-color));
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+            color: var(--text-color);
         }
 
+        /* Background Animation */
         @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .calculator {
-            width: 100%;
-            max-width: 600px;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
-
-        @media (min-width: 768px) {
-            .calculator {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: space-between;
-            }
-
-            .input-group {
-                width: calc(50% - 0.5rem);
-            }
-
-            .result-box {
-                width: 100%;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .calculator {
-                max-width: 800px;
-            }
-
-            .input-group {
-                width: calc(33.33% - 0.5rem);
-            }
-        }
-
-        .input-group, .result-box {
-            flex-grow: 1;
-        }
-
-        .result-box {
-            margin-top: 1rem;
-        }
-
-        @media (max-width: 480px) {
-            body {
-                font-size: 14px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            #result {
-                font-size: 1.2rem;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .calculator {
-                max-width: 1000px;
-            }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotateX(0); }
-            50% { transform: translateY(-10px) rotateX(1deg); }
-        }
-
-        .calculator::before {
-            content: '';
+        /* Particles Container */
+        #particles-js {
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #90CAF9, #A1C4FD, #E2EBF0);
-            border-radius: 22px;
-            z-index: -1;
-            filter: blur(15px);
-            opacity: 0.3;
-            animation: borderGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.4; }
-        }
-
-        h2 {
-            color: #37474F;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-            position: relative;
-            display: inline-block;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #90CAF9, #A1C4FD);
-            border-radius: 2px;
-            transform: scaleX(0);
-            animation: titleUnderline 3s ease-in-out infinite;
-        }
-
-        @keyframes titleUnderline {
-            0%, 100% { transform: scaleX(0); }
-            50% { transform: scaleX(1); }
-        }
-
-        .input-group {
-            margin-bottom: 2rem;
-            text-align: right;
-            position: relative;
-            transform: translateZ(20px);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.8rem;
-            color: #455A64;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: color 0.3s;
-        }
-
-        select, input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #E3F2FD;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #37474F;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-
-        select:hover, input:hover {
-            transform: translateY(-2px);
-            border-color: #BBDEFB;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-
-        select:focus, input:focus {
-            outline: none;
-            border-color: #90CAF9;
-            box-shadow: 0 0 15px rgba(144, 202, 249, 0.2);
-        }
-
-        .result-box {
-            background: linear-gradient(135deg, #F5F9FF 0%, #FFFFFF 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            margin-top: 2rem;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #E3F2FD;
-        }
-
-        .result-box::before {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
-            transition: all 0.5s;
-        }
-
-        .result-box:hover::before {
-            top: 100%;
-        }
-
-        #result {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #37474F;
-            line-height: 2;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .reset-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .reset-button:hover {
-            background-color: #c0392b;
-            transform: scale(1.1);
-        }
-
-        .input-group::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #90CAF9, #E3F2FD);
-            transition: all 0.3s;
-            transform: translateX(-50%);
-        }
-
-        .input-group:hover::after {
-            width: 100%;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.01); }
-            100% { transform: scale(1); }
-        }
-
-        .result-box.pulse {
-            animation: pulse 1s ease-in-out;
-        }
-
-        .loading::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, #90CAF9, #A1C4FD);
-            animation: loading 1.5s ease-in-out infinite;
-        }
-
-        @keyframes loading {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .background-animation {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            opacity: 0.5;
+            z-index: 1;
         }
 
-        .background-animation span {
+        /* Main Container */
+        .login-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            text-align: center;
+            z-index: 2;
+            transform-style: preserve-3d;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px) rotateX(5deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Heading Styles */
+        .login-container h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button Container */
+        .user-type-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Button Styles */
+        .user-type-buttons button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, 
+                var(--primary-color), 
+                var(--secondary-color));
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            position: relative;
+            overflow: hidden;
+            font-weight: 700;
+        }
+
+        .user-type-buttons button::before {
+            content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #4CAF50;
-            animation: move 3s linear infinite;
-            border-radius: 50%;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            transition: 0.5s;
         }
 
-        @keyframes move {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(300px, 300px);
-            }
+        .user-type-buttons button:hover::before {
+            left: 100%;
         }
 
-      .visitor-count {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.5s ease;
-}
-
-@media (max-width: 768px) {
-    .visitor-count {
-        top: 10px;
-        right: 10px;
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
-    }
-}
-        .visitor-count:hover {
+        .user-type-buttons button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Admin Login Form */
+        .admin-login-form {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .admin-login-form input {
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem auto;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .admin-login-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(35, 166, 213, 0.3);
+        }
+
+        .admin-login-form button {
+            margin-top: 1rem;
+            padding: 0.8rem 2rem;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+        }
+
+        .admin-login-form button:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Visitor Counter */
+        .visitor-count {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            color: white;
+            font-size: 1.2rem;
+            z-index: 1000;
+            animation: bounce 2s infinite;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            .login-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .user-type-buttons {
+                flex-direction: column;
+            }
+
+            .user-type-buttons button {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            .visitor-count {
+                top: 10px;
+                right: 10px;
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="background-animation">
-        <span style="left: 10%; top: 20%;"></span>
-        <span style="left: 30%; top: 40%;"></span>
-        <span style="left: 50%; top: 60%;"></span>
-        <span style="left: 70%; top: 80%;"></span>
-        <span style="left: 90%; top: 10%;"></span>
+    <!-- Particles.js Container -->
+    <div id="particles-js"></div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner"></div>
+
+    <!-- Visitor Counter -->
+    <div id="visitorCount" class="visitor-count animate__animated animate__fadeIn">
+        <span id="visitorCountNumber">0</span> زائر
     </div>
 
-   <div id="visitorCount" class="visitor-count">0</div>
-
-    <div class="calculator">
-        <h2>حاسبة تقسيط العمرة</h2>
-        <div class="input-group">
-            <label for="flightType">نوع الرحلة:</label>
-            <select id="flightType">
-                <option value="direct">مباشر</option>
-                <option value="indirect">غير مباشر</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label for="persons">عدد الأشخاص:</label>
-            <select id="persons">
-                <option value="1">شخص واحد</option>
-                <option value="2">شخصين</option>
-                <option value="3">3 أشخاص</option>
-                <option value="4">4 أشخاص</option>
-                <option value="5">5 أشخاص</option>
-                <option value="6">6 أشخاص</option>
-            </select>
-        </div>
-      <div class="input-group">
-    <label for="roomType">نوع الغرفة:</label>
-    <select id="roomType">
-        <option value="shared">غرفة جماعية</option>
-        <option value="quadruple">غرفة رباعية</option>
-        <option value="triple">غرفة ثلاثية</option>
-        <option value="double">غرفة ثنائية</option>
-        <option value="single">غرفة فردية</option>
-    </select>
-</div>
-        <div class="input-group">
-            <label for="months">عدد الأشهر:</label>
-            <select id="months">
-                <option value="3">3 أشهر</option>
-                <option value="4">4 أشهر</option>
-                <option value="5">5 أشهر</option>
-                <option value="6">6 أشهر</option>
-                <option value="7">7 أشهر</option>
-                <option value="8">8 أشهر</option>
-                <option value="9">9 أشهر</option>
-                <option value="10">10 أشهر</option>
-                <option value="11">11 شهر</option>
-                <option value="12">12 شهر</option>
-                <option value="13" selected>13 شهر</option>
-                <option value="14">14 شهر</option>
-                <option value="15">15 شهر</option>
-                <option value="16">16 شهر</option>
-                <option value="17">17 شهر</option>
-                <option value="18">18 شهر</option>
-            </select>
-        </div>
-       <div class="input-group">
-    <label for="downpayment">التسبيق (اختياري):</label>
-    <input type="number" 
-           id="downpayment" 
-           placeholder="أدخل مبلغ التسبيق" 
-           min="0" 
-           value="0"
-    >
-</div>
+    <!-- Main Container -->
+    <div class="login-container" data-aos="fade-up">
+        <h2 class="animate__animated animate__fadeInDown">حاسبة تقسيط العمرة</h2>
         
-        <div class="result-box">
-            <p id="result">النتيجة ستظهر هنا</p>
+        <div class="user-type-buttons">
+            <button onclick="redirectToCustomer()" 
+                    class="animate__animated animate__fadeInLeft"
+                    aria-label="دخول كزبون">
+                <i class="fas fa-user"></i> دخول كزبون
+            </button>
+            <button onclick="showAdminLogin()" 
+                    class="animate__animated animate__fadeInRight"
+                    aria-label="دخول كمدير">
+                <i class="fas fa-user-shield"></i> دخول كمدير
+            </button>
+        </div>
+
+        <div id="adminLoginForm" class="admin-login-form">
+            <h3>تسجيل دخول المدير</h3>
+            <div class="input-group">
+                <input type="password" 
+                       id="adminPassword" 
+                       placeholder="أدخل كلمة المرور"
+                       class="animate__animated animate__fadeIn"
+                       aria-label="كلمة مرور المدير">
+            </div>
+            <button onclick="checkAdminPassword()" 
+                    class="animate__animated animate__fadeIn"
+                    aria-label="تسجيل دخول">
+                دخول
+            </button>
         </div>
     </div>
 
-    <button class="reset-button" onclick="resetCalculator()">↺</button>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    
-    <!-- إضافة Firebase SDK -->
+    <!-- Essential JavaScript Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-code.js"></script>
 
     <script>
         // تكوين Firebase
@@ -454,215 +358,213 @@
             measurementId: "G-RM7T583FYY"
         };
 
-        // تهيئة Firebase
+        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-const PRICE_PER_PERSON = {
-    direct: {
-        shared: 149000,
-        quadruple: 169000,
-        triple: 175000,
-        double: 189000,
-        single: 00
-    },
-    indirect: {
-        shared: 0,
-        quadruple: 0,
-        triple: 0,
-        double: 0,
-        single: 0
-    }
-};
 
-        const RATES = {
-            1: 0.17, 2: 0.17, 3: 0.2, 4: 0.22, 5: 0.24,
-            6: 0.27, 7: 0.3, 8: 0.34, 9: 0.38, 10: 0.42,
-            11: 0.46, 12: 0.5, 13: 0.52, 14: 0.57, 15: 0.62,
-            16: 0.67, 17: 0.72, 18: 0.77
-        };
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            mirror: false,
+            anchorPlacement: 'top-bottom'
+        });
 
-      function getRoomTypeText(roomType) {
-    const types = {
-        shared: 'غرفة جماعية',
-        quadruple: 'غرفة رباعية',
-        triple: 'غرفة ثلاثية',
-        double: 'غرفة ثنائية',
-        single: 'غرفة فردية'
-    };
-    return types[roomType];
-}
+        // Initialize Particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: "#ffffff"
+                },
+                shape: {
+                    type: "circle"
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false,
+                    anim: {
+                        enable: false
+                    }
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#ffffff",
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: "none",
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "repulse"
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: "push"
+                    },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
 
-      
-        function roundUpToNearest100(number) {
-            return Math.ceil(number / 100) * 100;
+
+// Utility Functions
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
         }
 
-        function formatNumber(number) {
-            return number.toLocaleString('en-US', {
-                useGrouping: true,
-                maximumFractionDigits: 0
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        // Customer Redirect Function
+        function redirectToCustomer() {
+            showLoading();
+            Swal.fire({
+                title: 'جاري التحميل...',
+                html: 'سيتم توجيهك إلى صفحة الزبون',
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            }).then(() => {
+                window.location.href = 'customer.html';
             });
         }
 
+        // Admin Login Functions
+        function showAdminLogin() {
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            gsap.to(adminLoginForm, {
+                duration: 0.5,
+                display: 'block',
+                opacity: 1,
+                y: 0,
+                ease: 'power3.out'
+            });
+        }
 
-        const downpaymentInput = document.getElementById('downpayment');
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            showLoading();
 
-downpaymentInput.addEventListener('focus', function() {
-    if (this.value === '0') {
-        this.value = '';
-    }
-});
-
-downpaymentInput.addEventListener('blur', function() {
-    if (this.value === '') {
-        this.value = '0';
-        calculate();
-    }
-});
-
-        
-  function calculate() {
-    const resultBox = document.querySelector('.result-box');
-    resultBox.classList.add('loading');
-    
-    setTimeout(() => {
-        const flightType = document.getElementById('flightType').value;
-        const roomType = document.getElementById('roomType').value;
-        const persons = parseInt(document.getElementById('persons').value);
-        const months = parseInt(document.getElementById('months').value);
-        const downpayment = parseFloat(document.getElementById('downpayment').value) || 0;
-
-        const pricePerPerson = PRICE_PER_PERSON[flightType][roomType];
-        const totalPrice = persons * pricePerPerson;
-
-        if (downpayment > totalPrice) {
-            document.getElementById('result').innerHTML = 'مبلغ التسبيق أكبر من السعر الإجمالي';
-            return;
+            if (password === '2022') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم تسجيل الدخول بنجاح',
+                    text: 'جاري توجيهك إلى لوحة التحكم',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    window.location.href = 'admin.html';
+                });
+            } else {
+                hideLoading();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ في تسجيل الدخول',
+                    text: 'كلمة المرور غير صحيحة',
+                    confirmButtonText: 'حاول مرة أخرى'
+                });
+                document.getElementById('adminPassword').value = '';
+            }
         }
 
 
-                const remainingAmount = totalPrice - downpayment;
-                let monthlyRate = RATES[months] || 0.17;
-
-                if (remainingAmount >= 200000) {
-                    monthlyRate *= 0.8;
-                } else if (remainingAmount >= 100000) {
-                    monthlyRate *= 0.9;
-                }
-
-                const totalWithProfit = remainingAmount * (1 + monthlyRate);
-                const regularMonthlyPayment = roundUpToNearest100(Math.floor(totalWithProfit / months));
-                const lastMonthPayment = roundUpToNearest100(totalWithProfit - (regularMonthlyPayment * (months - 1)));
-
-                resultBox.classList.remove('loading');
-                resultBox.classList.remove('pulse');
-                void resultBox.offsetWidth; // Trigger reflow
-                resultBox.classList.add('pulse');
-
-        document.getElementById('result').innerHTML = `
-            نوع الرحلة: ${flightType === 'direct' ? 'مباشر' : 'غير مباشر'} <br>
-            نوع الغرفة: ${getRoomTypeText(roomType)} <br>
-            القسط الشهري: ${formatNumber(regularMonthlyPayment)} <br>
-            إجمالي المبلغ: ${formatNumber(regularMonthlyPayment * months)}
-        `;
-    }, 300);
-}
-
-
-      function resetCalculator() {
-    document.getElementById('flightType').value = 'direct';
-    document.getElementById('roomType').value = 'shared';
-    document.getElementById('persons').value = '1';
-    document.getElementById('months').value = '13';
-    document.getElementById('downpayment').value = '0';
-    document.getElementById('result').innerHTML = 'النتيجة ستظهر هنا';
-    calculate();
-}
-
-
-
-        // دالة لزيادة عدد الزيارات
+// Visitor Counter Functions
         function incrementVisitorCount() {
-    const visitorId = localStorage.getItem('visitorId');
-    if (!visitorId) {
-        // إذا لم يكن هناك معرف للزائر، قم بإنشاء واحد جديد
-        const newVisitorId = Date.now().toString();
-        localStorage.setItem('visitorId', newVisitorId);
-        
-        const visitorRef = database.ref('visitorCount');
-        visitorRef.transaction((currentCount) => {
-            return (currentCount || 0) + 1;
-        }, (error, committed, snapshot) => {
-            if (error) {
-                console.error('فشل تحديث العدّاد:', error);
-            } else if (committed) {
-                document.getElementById('visitorCount').textContent = snapshot.val();
+            const visitorId = localStorage.getItem('visitorId');
+            if (!visitorId) {
+                const newVisitorId = Date.now().toString();
+                localStorage.setItem('visitorId', newVisitorId);
+                
+                const visitorRef = database.ref('visitorCount');
+                visitorRef.transaction((currentCount) => {
+                    return (currentCount || 0) + 1;
+                });
             }
-        });
-    } else {
-        // إذا كان هناك معرف للزائر، فقط قم بعرض العدد الحالي
-        displayVisitorCount();
-    }
-}
+            displayVisitorCount();
+        }
 
-        // دالة لعرض عدد الزيارات
         function displayVisitorCount() {
             const visitorRef = database.ref('visitorCount');
             visitorRef.on('value', (snapshot) => {
-                document.getElementById('visitorCount').textContent = snapshot.val();
-            }, (error) => {
-                console.error('فشل جلب عدد الزيارات:', error);
+                const count = snapshot.val() || 0;
+                gsap.to('#visitorCountNumber', {
+                    textContent: count,
+                    duration: 2,
+                    snap: { textContent: 1 },
+                    stagger: 1,
+                    ease: 'power1.inOut'
+                });
             });
         }
 
-        // تأثيرات حركية باستخدام GSAP
-        function initAnimations() {
-            gsap.from('.calculator', {duration: 1, opacity: 0, y: 50, ease: 'power3.out'});
-            gsap.from('.input-group', {duration: 0.8, opacity: 0, y: 20, stagger: 0.2, ease: 'power3.out'});
-            gsap.from('.result-box', {duration: 1, opacity: 0, scale: 0.9, ease: 'elastic.out(1, 0.5)', delay: 0.5});
-            gsap.from('.visitor-count', {duration: 1, opacity: 0, x: -50, ease: 'power3.out', delay: 1});
-        }
+        // Error Handling
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
+            return false;
+        };
 
         // Event Listeners
-        document.querySelector('.calculator').addEventListener('change', function(event) {
-            if (event.target.matches('select, input')) {
-                calculate();
+        document.addEventListener('DOMContentLoaded', () => {
+            incrementVisitorCount();
+            displayVisitorCount();
+        });
+
+        document.getElementById('adminPassword').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                checkAdminPassword();
             }
         });
 
-
-
-function changeColor() {
-    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    document.getElementById('visitorCount').style.backgroundColor = randomColor;
-}
-
-setInterval(changeColor, 3000);
-
-        
-        // تأثيرات حركية للمدخلات
-        const inputs = document.querySelectorAll('select, input');
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                input.parentElement.style.transform = 'translateZ(30px)';
-            });
-            
-            input.addEventListener('blur', () => {
-                input.parentElement.style.transform = 'translateZ(20px)';
-            });
-        });
-
-        // إضافة مستمع الحدث لعنصر نوع الرحلة
-        document.getElementById('flightType').addEventListener('change', calculate);
-
+        // Performance Optimization
         window.addEventListener('load', () => {
-            calculate();
-            incrementVisitorCount();
-            displayVisitorCount();
-            initAnimations();
+            setTimeout(() => {
+                const styleSheets = document.querySelectorAll('link[rel="stylesheet"]');
+                styleSheets.forEach(sheet => {
+                    sheet.media = 'all';
+                });
+            }, 0);
         });
+
+        // Service Worker Registration (if needed)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
